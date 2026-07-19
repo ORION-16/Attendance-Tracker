@@ -18,7 +18,7 @@ function ButtonContent({ loading, children, loadingText }) {
 }
 
 function AuthScreen() {
-  const { authenticate } = useAuth();
+  const { authenticate, restoringSession } = useAuth();
   const [mode, setMode] = useState('login');
   const [form, setForm] = useState({ name: '', email: '', password: '' });
   const [error, setError] = useState('');
@@ -47,6 +47,7 @@ function AuthScreen() {
       </section>
       <section className="auth-card">
         <div className="wordmark">ROLL CALL<span>•</span></div>
+        {restoringSession && <p className="session-check"><Spinner /> Checking saved session...</p>}
         <h2>{signup ? 'Start your ledger' : 'Welcome back'}</h2>
         <p className="muted">{signup ? 'Create your private account in a minute.' : 'Sign in to continue your record.'}</p>
         <form onSubmit={submit}>
@@ -80,7 +81,6 @@ function AuthScreen() {
 function Dashboard() {
   const { user, logout } = useAuth();
   const [years, setYears] = useState([]);
-  const [subjects, setSubjects] = useState([]);
   const [summary, setSummary] = useState({ subjects: [], overall: { total: 0, present: 0, percentage: 0 } });
   const [yearLabel, setYearLabel] = useState('');
   const [subject, setSubject] = useState({ name: '', yearId: '' });
@@ -101,13 +101,11 @@ function Dashboard() {
   async function load({ showRefresh = false } = {}) {
     if (showRefresh) setRefreshing(true);
     try {
-      const [yearsRes, subjectsRes, summaryRes] = await Promise.all([
+      const [yearsRes, summaryRes] = await Promise.all([
         api.get('/years'),
-        api.get('/subjects'),
         api.get('/attendance/summary'),
       ]);
       setYears(yearsRes.data.years);
-      setSubjects(subjectsRes.data.subjects);
       setSummary(summaryRes.data);
     } finally {
       if (showRefresh) setRefreshing(false);
@@ -348,7 +346,6 @@ function Dashboard() {
 }
 
 export default function App() {
-  const { user, loading } = useAuth();
-  if (loading) return <div className="loading"><Spinner /> Loading your ledger...</div>;
+  const { user } = useAuth();
   return user ? <Dashboard /> : <AuthScreen />;
 }

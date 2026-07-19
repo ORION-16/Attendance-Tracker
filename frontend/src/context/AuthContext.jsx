@@ -5,13 +5,13 @@ const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [restoringSession, setRestoringSession] = useState(true);
 
   useEffect(() => {
     api.post('/auth/refresh')
       .then(({ data }) => { setAccessToken(data.accessToken); setUser(data.user); })
       .catch(() => setAccessToken(null))
-      .finally(() => setLoading(false));
+      .finally(() => setRestoringSession(false));
   }, []);
 
   async function authenticate(mode, payload) {
@@ -24,7 +24,7 @@ export function AuthProvider({ children }) {
     try { await api.post('/auth/logout'); } finally { setAccessToken(null); setUser(null); }
   }
 
-  return <AuthContext.Provider value={{ user, loading, authenticate, logout }}>{children}</AuthContext.Provider>;
+  return <AuthContext.Provider value={{ user, restoringSession, authenticate, logout }}>{children}</AuthContext.Provider>;
 }
 
 export const useAuth = () => useContext(AuthContext);
