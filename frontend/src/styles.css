@@ -48,8 +48,9 @@ button:disabled, input:disabled, select:disabled { cursor: not-allowed; opacity:
 h1 em { color: #e5b14e; }
 .auth-intro > p:last-child { max-width: 30rem; color: #c6d0c7; font-size: 1.1rem; line-height: 1.7; }
 .auth-card { margin: auto; width: min(27rem, calc(100% - 3rem)); padding: 2rem 0; }
-.wordmark { color: var(--forest); font-weight: 700; }
-.wordmark span { color: var(--amber); }
+.brand { display: inline-flex; align-items: center; gap: .55rem; color: var(--forest); }
+.wordmark { color: inherit; font-weight: 700; }
+.brand-mark { width: 1.9rem; height: 1.9rem; flex: 0 0 auto; overflow: visible; }
 .session-check { display: inline-flex; align-items: center; gap: .5rem; margin: 1rem 0 0; color: var(--moss); font: 500 .74rem 'DM Mono', monospace; }
 .auth-card h2, .setup-panel h2, .records h2 { font: 700 1.55rem 'Libre Baskerville', serif; margin: 1.5rem 0 .35rem; }
 .muted { color: var(--muted); margin: 0 0 1.8rem; }

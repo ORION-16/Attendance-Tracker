@@ -17,6 +17,15 @@ function ButtonContent({ loading, children, loadingText }) {
   );
 }
 
+function Brand() {
+  return (
+    <div className="brand" aria-label="Roll Call">
+      <img className="brand-mark" src="/roll-call-mark.svg" alt="" />
+      <span className="wordmark">ROLL CALL</span>
+    </div>
+  );
+}
+
 function AuthScreen() {
   const { authenticate, restoringSession } = useAuth();
   const [mode, setMode] = useState('login');
@@ -46,7 +55,7 @@ function AuthScreen() {
         <p>One quiet place to track every class, every semester, and the percentage that matters.</p>
       </section>
       <section className="auth-card">
-        <div className="wordmark">ROLL CALL<span>•</span></div>
+        <Brand />
         {restoringSession && <p className="session-check"><Spinner /> Checking saved session...</p>}
         <h2>{signup ? 'Start your ledger' : 'Welcome back'}</h2>
         <p className="muted">{signup ? 'Create your private account in a minute.' : 'Sign in to continue your record.'}</p>
@@ -200,7 +209,7 @@ function Dashboard() {
     <main className="app-shell">
       <header>
         <div>
-          <div className="wordmark">ROLL CALL<span>•</span></div>
+          <Brand />
           <p className="date-line">{new Date().toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long' })}</p>
         </div>
         <div className="profile">
