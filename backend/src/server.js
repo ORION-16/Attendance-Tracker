@@ -18,19 +18,25 @@ const attendanceRoutes = require('./routes/attendanceRoutes');
 const env = loadEnv();
 const app = express();
 const isLocalClient = /^http:\/\/(localhost|127\.0\.0\.1):\d+$/.test(env.clientUrl);
+const allowedOrigins = new Set([
+  env.clientUrl,
+  'https://attendance-tracker-blond.vercel.app',
+].filter(Boolean));
 
 app.disable('x-powered-by');
 app.set('trust proxy', 1);
 app.use(helmet());
 const isAllowedOrigin = (origin) => {
-  if (!origin || origin === env.clientUrl) return true;
+  if (!origin || allowedOrigins.has(origin)) return true;
   if (isLocalClient && /^http:\/\/(localhost|127\.0\.0\.1):\d+$/.test(origin)) return true;
+  if (/^https:\/\/attendance-tracker-[a-z0-9-]+\.vercel\.app$/.test(origin)) return true;
   return false;
 };
 
 app.use(cors({
   origin(origin, callback) {
-    callback(isAllowedOrigin(origin) ? null : new Error('This browser origin is not allowed.'), isAllowedOrigin(origin));
+    const allowed = isAllowedOrigin(origin);
+    callback(allowed ? null : new Error('This browser origin is not allowed.'), allowed);
   },
   credentials: true,
 }));
